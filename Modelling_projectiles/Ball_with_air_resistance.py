@@ -1,65 +1,42 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+#Functionalise the euler method 
+def simulate_projectile(vx0, vy0, dt, g, m, k=0, drag=True):
+    x, y = 0, 0
+    vx, vy = vx0, vy0
+    x_values = [x]
+    y_values = [y]
+
+    while y>=0:
+        if drag:
+            ax = -(k/m) * vx
+            ay = -g - (k/m) * vy
+        else:
+            ax = 0
+            ay = -g
+        vx = vx + ax * dt 
+        vy = vy + ay * dt
+
+        x = x + vx * dt
+        y = y + vy * dt 
+
+        x_values.append(x)
+        y_values.append(y)
+    return x_values, y_values
+
 #Constants
 g = 9.81
 m = 0.15
 k = 0.05
 dt = 0.01
 
-#Initial conditions 
-x = 0
-y = 0
+#With air resistance
+x_values, y_values = simulate_projectile(15, 20, dt, g, m, k=k, drag=True)
 
-vx = 15
-vy = 20
-
-x_values = [x]
-y_values = [y]
-
-#Euler method 
-while y >= 0:
-    #Change in acceleration
-    ax = -(k/m)*vx
-    ay = -g -(k/m)*vy
-    #Change in velocity 
-    vx = vx + ax * dt
-    vy = vy + ay * dt
-
-    x = x + vx * dt
-    y = y + vy * dt
-
-    x_values.append(x)
-    y_values.append(y)
-
-#Plot with no air resistance 
-x_no = 0
-y_no = 0
-
-vx_no = 15
-vy_no = 20
-
-x_values_no = [x_no]
-y_values_no = [y_no]
-
-#Euler loop for no air resistance
-while y_no >= 0:
-
-    # Accelerations
-    ax = 0
-    ay = -g
-
-    # Update velocities
-    vx_no = vx_no + ax * dt
-    vy_no = vy_no + ay * dt
-
-    # Update positions
-    x_no = x_no + vx_no * dt
-    y_no = y_no + vy_no * dt
-
-    # Store positions
-    x_values_no.append(x_no)
-    y_values_no.append(y_no)
+#Without air resistance
+x_values_no, y_values_no = simulate_projectile(15, 20, dt, g, m, drag=False)
 
 
 #Plot
